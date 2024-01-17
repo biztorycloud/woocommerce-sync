@@ -204,6 +204,7 @@ function biztory_settings_redirect() {
 // add_action( 'woocommerce_payment_complete', 'biztory_payment_complete', 10, 1 );
 // add_action( 'woocommerce_payment_complete', 'biztory_payment_complete');
 add_action( 'woocommerce_order_status_completed', 'biztory_payment_complete');
+// add_action( 'woocommerce_payment_complete_order_status_completed', 'biztory_payment_complete', 10, 1 );
 
 function biztory_payment_complete( $order_id ) {
 	$logger = wc_get_logger();
@@ -365,7 +366,7 @@ function get_payment_term_name($woo_payment_method) {
 }
 
 function set_shipping_fees(&$invoice, $order) {
-    $shipping_fees = $order->get_shipping_total();
+    $shipping_fees = floatval($order->get_shipping_total());
 
     if (!$shipping_fees) {
         return true;
@@ -416,7 +417,7 @@ function set_items(&$invoice, $order)
         $product = $itm->get_product();
         $item_data = [
             'qty'           => $itm->get_quantity(),
-            'price'         => number_format($price,2),
+            'price'         => $price,
             'total'         => $total,
             'total_tax'     => 0.00,
             'code'          => $product->get_sku(),
